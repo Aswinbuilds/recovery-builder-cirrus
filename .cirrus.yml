@@ -7,11 +7,11 @@ env:
    TARGET: recoveryimage
    TZ: Asia/Kolkata
 
-task: 
-  name: "Making Env building recovery and uploading plz wait"
+task:
+  name: "Setting Up, Syncing, Building and Uploading..."
   timeout_in: 240m  
   container:
-      image: ubuntu-18.04
+      image: ubuntu:20.04
       cpu: 8
       memory: 32G
 
