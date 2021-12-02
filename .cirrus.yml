@@ -25,12 +25,8 @@ task:
        - cd ~/bin
        - curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
        - chmod a+x ~/bin/repo
-       - git clone https://github.com/akhilnarang/scripts.git scripts
-       - cd scripts
-       - bash setup/android_build_env.sh
        - git config --global user.name "atharv2951"
        - git config --global user.email "atharv2951@gmail.com"
-       - export TZ=Asia/Mumbai
   
   Sync_script:
       - mkdir -p ~/work
