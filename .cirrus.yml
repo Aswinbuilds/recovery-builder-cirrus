@@ -5,51 +5,51 @@ env:
     DT_LINK: https://github.com/Atharv2951-Roms/device_samsung_j7velte
     DT_PATH: device/samsung/j7velte
     TARGET: recoveryimage
-    TZ: Asia/Kolkata 
- 
-task:
-    name: "Setting Up, Syncing, Building and Uploading..."
-    timeout_in: 240m  
-    container:
-             image: ubuntu:20.04
-             cpu: 8
-             memory: 32G
 
-    Initializing environment:
+task:
+  name: "Setting Up, Syncing, Building and Uploading..."
+  timeout_in: 240m  
+  container:
+      image: ubuntu:20.04
+      cpu: 8
+      memory: 32G
+  
+  Build-Env-Setup_script:
        - export DEBIAN_FRONTEND=noninteractive
        - apt update
        - apt install sudo
        - mkdir ~/bin
        - PATH=~/bin:$PATH
-       - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+       - cd ~/bin
+       - curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
        - chmod a+x ~/bin/repo
-       - git clone https://gitlab.com/OrangeFox/misc/scripts
-       - sudo bash setup/android_build_env.sh
-       - sudo bash setup/install_android_sdk.sh
+       - git clone https://github.com/akhilnarang/scripts.git scripts
+       - bash setup/android_build_env.sh
        - git config --global user.name "atharv2951"
-       - git config --global user.email "manofuranium@gmail.com
-       - cd ~
+       - git config --global user.email "atharv2951@gmail.com"
+  
+  Sync_script:
+      - mkdir -p ~/work
+      - cd ~/work
+      - repo init --depth=1 -u $MANIFEST $MANIFEST_BRANCH
+      - repo sync
+      - git clone $DT_LINK $DT_PATH
 
-    Sync recovery source and device tree:
-       - mkdir -p ~/recovery
-       - cd ~/recovery
-       - repo init -u $MANIFEST -b $MANIFEST_BRANCH --depth=1 --groups=all,-notdefault,-device,-darwin,-x86,-mips
-       - repo sync -j4
-       - git clone $DT_LINK --depth=1 --single-branch $DT_PATH
+  Build_script:
+      - cd ~/work
+      - export ALLOW_MISSING_DEPENDENCIES=true
       - export LC_ALL="C"
       - export USE_CCACHE=1
       - export CCACHE_EXEC=/usr/bin/ccache
       - ccache -M 50G
-
-    Build:
-       - cd ~/recovery
-       - . build/envsetup.sh 
-       - lunch omni_$DEVICE-eng 
-       - export ALLOW_MISSING_DEPENDENCIES=true && mka $TARGET
-
-    Uploading:
-       - cd ~/recovery
-       - cd out/target/product/$DEVICE
-       - curl -sL https://git.io/file-transfer | sh 
-       - ./transfer wet P*.zip
-             
+      - . build/envsetup.sh
+      - lunch omni_$DEVICE-eng
+      - mka $TARGET
+     
+  Upload_script:
+      - cd ~/work
+      - cd out/target/product/"$DEVICE"
+      - ls -lh
+      - curl -sL https://git.io/file-transfer | sh 
+      - ./transfer wet P*.zip
+        
