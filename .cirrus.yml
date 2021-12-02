@@ -15,7 +15,7 @@ task:
              cpu: 8
              memory: 32G
 
-  Initializing environment:
+    Initializing environment:
        - export DEBIAN_FRONTEND=noninteractive
        - apt update
        - apt install sudo
@@ -30,7 +30,7 @@ task:
        - git config --global user.email "manofuranium@gmail.com
        - cd ~
 
-  Sync recovery source and device tree:
+    Sync recovery source and device tree:
        - mkdir -p ~/recovery
        - cd ~/recovery
        - repo init -u $MANIFEST -b $MANIFEST_BRANCH --depth=1 --groups=all,-notdefault,-device,-darwin,-x86,-mips
@@ -41,13 +41,13 @@ task:
       - export CCACHE_EXEC=/usr/bin/ccache
       - ccache -M 50G
 
-  Build:
+    Build:
        - cd ~/recovery
        - . build/envsetup.sh 
        - lunch omni_$DEVICE-eng 
        - export ALLOW_MISSING_DEPENDENCIES=true && mka $TARGET
 
-Uploading:
+    Uploading:
        - cd ~/recovery
        - cd out/target/product/$DEVICE
        - curl -sL https://git.io/file-transfer | sh 
