@@ -18,8 +18,7 @@ task:
        - export DEBIAN_FRONTEND=noninteractive
        - apt update
        - apt install sudo
-       - sudo apt update
-       - sudo apt install curl
+       - sudo apt install curl -y
        - mkdir ~/bin
        - PATH=~/bin:$PATH
        - cd ~/bin
