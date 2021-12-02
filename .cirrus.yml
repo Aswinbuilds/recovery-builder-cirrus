@@ -7,7 +7,7 @@ env:
    TARGET: recoveryimage
    TZ: Asia/Kolkata
 
-task:
+ task:
   name: "Setting Up, Syncing, Building and Uploading..."
   timeout_in: 240m  
   container:
