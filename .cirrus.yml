@@ -19,6 +19,7 @@ task:
        - apt update
        - apt install sudo
        - sudo apt install curl -y
+       - sudo apt-get install git -y
        - mkdir ~/bin
        - PATH=~/bin:$PATH
        - cd ~/bin
