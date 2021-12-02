@@ -1,12 +1,13 @@
 env:
-   MANIFEST: git://github.com/PitchBlackRecoveryProject/manifest_pb.git
-   MANIFEST_BRANCH: android-9.0
-   DEVICE: j7velte
-   DT_LINK: https://github.com/Atharv2951-Roms/device_samsung_j7velte
-   DT_PATH: device/samsung/j7velte
-   TARGET: recoveryimage
-   TZ: Asia/Kolkata 
- task:
+    MANIFEST: git://github.com/PitchBlackRecoveryProject/manifest_pb.git
+    MANIFEST_BRANCH: android-9.0
+    DEVICE: j7velte
+    DT_LINK: https://github.com/Atharv2951-Roms/device_samsung_j7velte
+    DT_PATH: device/samsung/j7velte
+    TARGET: recoveryimage
+    TZ: Asia/Kolkata 
+ 
+task:
   name: "Setting Up, Syncing, Building and Uploading..."
   timeout_in: 240m  
   container:
