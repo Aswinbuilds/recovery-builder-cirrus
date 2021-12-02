@@ -1,0 +1,55 @@
+env:
+   MANIFEST: git://github.com/PitchBlackRecoveryProject/manifest_pb.git
+   MANIFEST_BRANCH: android-9.0
+   DEVICE: j7velte
+   DT_LINK: https://github.com/Atharv2951-Roms/device_samsung_j7velte
+   DT_PATH: device/samsung/j7velte
+   TARGET: recoveryimage
+   TZ: Asia/Kolkata
+
+task:
+  name: "Making Env building recovery and uploading plz wait"
+  timeout_in: 240m  
+  container:
+      image: ubuntu-18.04
+      cpu: 8
+      memory: 32G
+
+  Initializing environment:
+       - export DEBIAN_FRONTEND=noninteractive
+       - apt update
+       - apt install sudo
+       - mkdir ~/bin
+       - PATH=~/bin:$PATH
+       - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+       - chmod a+x ~/bin/repo
+       - git clone https://gitlab.com/OrangeFox/misc/scripts
+       - sudo bash setup/android_build_env.sh
+       - sudo bash setup/install_android_sdk.sh
+       - git config --global user.name "atharv2951"
+       - git config --global user.email "manofuranium@gmail.com
+       - cd ~
+
+  Sync recovery source and device tree:
+       - mkdir -p ~/recovery
+       - cd ~/recovery
+       - repo init -u $MANIFEST -b $MANIFEST_BRANCH --depth=1 --groups=all,-notdefault,-device,-darwin,-x86,-mips
+       - repo sync -j4
+       - git clone $DT_LINK --depth=1 --single-branch $DT_PATH
+      - export LC_ALL="C"
+      - export USE_CCACHE=1
+      - export CCACHE_EXEC=/usr/bin/ccache
+      - ccache -M 50G
+
+  Build:
+       - cd ~/recovery
+       - . build/envsetup.sh 
+       - lunch omni_$DEVICE-eng 
+       - export ALLOW_MISSING_DEPENDENCIES=true && mka $TARGET
+
+Uploading:
+       - cd ~/recovery
+       - cd out/target/product/$DEVICE
+       - curl -sL https://git.io/file-transfer | sh 
+       - ./transfer wet P*.zip
+             
