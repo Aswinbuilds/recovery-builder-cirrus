@@ -46,7 +46,7 @@ task:
       - export LC_ALL="C"
       - export USE_CCACHE=1
       - export CCACHE_EXEC=/usr/bin/ccache
-      - ccache -M 50G
+      - ccache -M 60G
       - . build/envsetup.sh
       - lunch twrp_$DEVICE-eng
       - mka $TARGET
