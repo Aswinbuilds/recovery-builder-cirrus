@@ -1,10 +1,11 @@
 env:
-    MANIFEST: git://github.com/PitchBlackRecoveryProject/manifest_pb.git
-    MANIFEST_BRANCH: android-9.0
-    DEVICE: j7velte
-    DT_LINK: https://github.com/Atharv2951-Roms/device_samsung_j7velte
-    DT_PATH: device/samsung/j7velte
-    TARGET: recoveryimage
+    MANIFEST: git://github.com/SHRP/manifest.git
+    MANIFEST_BRANCH: v3_11.0
+    DEVICE: lisa
+    DT_LINK: https://github.com/Aswinbuilds/android_device_xiaomi_lisa
+    DT_PATH: device/xiaomi/lisa
+    TARGET: bootimage
+    BOTTOKEN: ${{ secrets.bottoken }}
 
 task:
   name: "Setting Up, Syncing, Building and Uploading..."
@@ -29,14 +30,14 @@ task:
        - cd ~/scripts
        - sudo bash setup/android_build_env.sh
        - cd ~
-       - git config --global user.name "atharv2951"
-       - git config --global user.email "atharv2951@gmail.com"
+       - git config --global user.name "aswin11234"
+       - git config --global user.email "aswinsanker08@gmail.com"
   
   Sync_script:
       - mkdir -p ~/work
       - cd ~/work
       - repo init --depth=1 -u $MANIFEST $MANIFEST_BRANCH
-      - repo sync
+      - repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
       - git clone $DT_LINK $DT_PATH
 
   Build_script:
@@ -47,13 +48,12 @@ task:
       - export CCACHE_EXEC=/usr/bin/ccache
       - ccache -M 50G
       - . build/envsetup.sh
-      - lunch omni_$DEVICE-eng
+      - lunch twrp_$DEVICE-eng
       - mka $TARGET
      
   Upload_script:
       - cd ~/work
-      - cd out/target/product/"$DEVICE"
-      - ls -lh
-      - curl -sL https://git.io/file-transfer | sh 
-      - ./transfer wet P*.zip
+      - cd out/target/product/$DEVICE
+      - zip -r boot.img.zip boot.img
+      - for i in *.zip; do curl -F document=@"$i" https://api.telegram.org/bot$BOTTOKEN/sendDocument?chat_id=-1001556491427; done
         
